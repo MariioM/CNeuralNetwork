@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../include/neuron.c"
+#include "../include/networkElements.c"
 
 int main()
 {

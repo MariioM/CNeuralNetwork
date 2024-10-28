@@ -1,4 +1,4 @@
-#include "../include/neuron.h"
+#include "networkElements.h"
 #include <stdlib.h>
 
 tNeuron *CreateNeuron(int bias)
