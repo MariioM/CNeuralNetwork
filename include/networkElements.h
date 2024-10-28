@@ -3,6 +3,7 @@ typedef struct neuron
 {
     int bias;
     double output;
+    double input;
     struct neuron *next;
 } tNeuron;
 
@@ -24,4 +25,5 @@ typedef struct network
     int layer_count; // Número de capas
 } tNetwork;
 
-extern tNeuron *CreateNeuron(int blias);
+extern tNeuron *CreateNeuron();
+extern tConnection *CreateConnection();

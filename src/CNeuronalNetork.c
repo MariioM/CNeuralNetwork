@@ -3,5 +3,5 @@
 
 int main()
 {
-    tNeuron neuron;
+    tNeuron *neuron_entry;
 }
