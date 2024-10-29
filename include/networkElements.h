@@ -1,10 +1,14 @@
+#ifndef NETWORK_ELEMENTS_H
+#define NETWORK_ELEMENTS_H
 
 typedef struct neuron
 {
-    int bias;
+    double bias;
     double output;
     double input;
     struct neuron *next;
+    struct connection **outgoing_connections;
+    int outgoing_count;
 } tNeuron;
 
 typedef struct connection
@@ -15,15 +19,22 @@ typedef struct connection
 
 typedef struct layer
 {
-    tNeuron *neurons; // Array o lista de neuronas en la capa
-    int neuron_count; // Número de neuronas en la capa
+    tNeuron **neurons;
+    int neuron_count;
+    struct layer *next_layer;
 } tLayer;
 
 typedef struct network
 {
-    tLayer *layers;  // Array o lista de capas en la red
-    int layer_count; // Número de capas
+    tLayer *layers;
+    int layer_count;
 } tNetwork;
 
 extern tNeuron *CreateNeuron();
-extern tConnection *CreateConnection();
+extern tConnection *CreateConnection(tNeuron *originNeuron, tNeuron *destinationNeuron, int n);
+extern tLayer *CreateLayer(int neuron_count);
+
+extern void CreateConnectionsBetweenLayers(tLayer *layer1, tLayer *layer2);
+
+void PrintLayerConnections(tLayer *layer, int layer_index);
+#endif
