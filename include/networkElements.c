@@ -8,11 +8,13 @@
 tNeuron *CreateNeuron()
 {
     tNeuron *new_neuron = (tNeuron *)malloc(sizeof(tNeuron));
-    new_neuron->bias = 0;
-    new_neuron->output = 0;
-    new_neuron->input = 0;
+    new_neuron->bias = 0.0;
+    new_neuron->output = 0.0;
+    new_neuron->input = 0.0;
     new_neuron->next = NULL;
     new_neuron->outgoing_connections = NULL;
+    new_neuron->outgoing_count = 0;
+    new_neuron->output_error = 0;
     return new_neuron;
 }
 

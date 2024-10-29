@@ -6,6 +6,7 @@ typedef struct neuron
     double bias;
     double output;
     double input;
+    double output_error;
     struct neuron *next;
     struct connection **outgoing_connections;
     int outgoing_count;
@@ -35,6 +36,12 @@ extern tConnection *CreateConnection(tNeuron *originNeuron, tNeuron *destination
 extern tLayer *CreateLayer(int neuron_count);
 
 extern void CreateConnectionsBetweenLayers(tLayer *layer1, tLayer *layer2);
+extern void SetInput(tLayer *layer, double input);
+extern void ForwardPropagation(tLayer *currentLayer);
+extern void SetLayerInputFromPreviousLayer(tLayer *previousLayer, tLayer *currentLayer);
 
-void PrintLayerConnections(tLayer *layer, int layer_index);
+extern void CalculateOutputError(tLayer *outputLayer, double expected);
+extern void Backpropagate(tLayer *currentLayer, float learning_rate);
+extern void TrainNetwork(tLayer *entryLayer, tLayer *hiddenLayer1, tLayer *hiddenLayer2, tLayer *outputLayer, double *inputs, double *expected_outputs, int data_count, int epochs, float learning_rate);
+
 #endif
