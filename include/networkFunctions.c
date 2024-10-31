@@ -1,5 +1,4 @@
 // networkFunctions.c
-
 #include <networkElements.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -81,25 +80,39 @@ void CalculateOutputError(tLayer *outputLayer, double expected)
 {
     for (int i = 0; i < outputLayer->neuron_count; i++)
     {
-        tNeuron *neuron = outputLayer->neurons[i];
-        neuron->output_error = expected - neuron->output;
-        printf("loss: %f\n", neuron->output_error);
+        outputLayer->neurons[i]->output_error = expected - outputLayer->neurons[i]->output;
+        printf("loss: %f\n", outputLayer->neurons[i]->output_error);
     }
 }
 
 void Backpropagate(tLayer *currentLayer, float learning_rate)
 {
+    double max_weight = 10.0;
+
     for (int i = 0; i < currentLayer->neuron_count; i++)
     {
         tNeuron *neuron = currentLayer->neurons[i];
 
+        if (neuron->outgoing_count > 0)
+        {
+            neuron->output_error = 0.0;
+            for (int j = 0; j < neuron->outgoing_count; j++)
+            {
+                tConnection *connection = neuron->outgoing_connections[j];
+                neuron->output_error += connection->weight * connection->destination->output_error;
+            }
+        }
+
         for (int j = 0; j < neuron->outgoing_count; j++)
         {
             tConnection *connection = neuron->outgoing_connections[j];
-
-            // Calcula el gradiente del peso
             double gradient = neuron->output_error * connection->origin->output;
-            connection->weight += learning_rate * gradient; // Ajusta el peso
+            connection->weight -= learning_rate * gradient;
+
+            if (connection->weight > max_weight)
+                connection->weight = max_weight;
+            else if (connection->weight < -max_weight)
+                connection->weight = -max_weight;
         }
     }
 }
@@ -108,12 +121,13 @@ void TrainNetwork(tLayer *entryLayer, tLayer *hiddenLayer1, tLayer *hiddenLayer2
 {
     for (int epoch = 0; epoch < epochs; epoch++)
     {
+        double total_loss = 0.0;
         printf("Epoch %d/%d\n", epoch + 1, epochs);
+
         for (int i = 0; i < data_count; i++)
         {
             SetInput(entryLayer, inputs[i]);
             ForwardPropagation(entryLayer);
-
             SetLayerInputFromPreviousLayer(entryLayer, hiddenLayer1);
             ForwardPropagation(hiddenLayer1);
             SetLayerInputFromPreviousLayer(hiddenLayer1, hiddenLayer2);
@@ -122,10 +136,14 @@ void TrainNetwork(tLayer *entryLayer, tLayer *hiddenLayer1, tLayer *hiddenLayer2
             ForwardPropagation(outputLayer);
             outputLayer->neurons[0]->output = outputLayer->neurons[0]->input;
             CalculateOutputError(outputLayer, expected_outputs[i]);
+            total_loss += outputLayer->neurons[0]->output_error * outputLayer->neurons[0]->output_error;
 
             Backpropagate(outputLayer, learning_rate);
             Backpropagate(hiddenLayer2, learning_rate);
             Backpropagate(hiddenLayer1, learning_rate);
         }
+
+        double avg_loss = total_loss / data_count;
+        printf("Pérdida promedio de la época %d: %f\n", epoch + 1, avg_loss);
     }
 }

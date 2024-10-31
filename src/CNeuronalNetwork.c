@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "../include/networkElements.h"
 
-#define LEARNING_RATE 0.001
-#define EPOCHS 10
+#define LEARNING_RATE 0.00001
+#define EPOCHS 500
 
 void PrintLayerConnections(tLayer *layer, int layer_index);
 
@@ -29,7 +29,7 @@ int main()
     PrintLayerConnections(hiddenLayer2, 2);
     PrintLayerConnections(outputLayer, 3);*/
 
-    SetInput(entryLayer, -40);
+    SetInput(entryLayer, -10);
     ForwardPropagation(entryLayer);
     SetLayerInputFromPreviousLayer(entryLayer, hiddenLayer1);
     ForwardPropagation(hiddenLayer1);
