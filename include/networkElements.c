@@ -24,10 +24,9 @@ tConnection *CreateConnection(tNeuron *originNeuron, tNeuron *destinationNeuron,
     new_connection->origin = originNeuron;
     new_connection->destination = destinationNeuron;
 
-    // Calculation of the initial weight
-    float random = (float)rand() / RAND_MAX;
-    float standardDeviation = sqrt(2.0 / n);
-    new_connection->weight = -standardDeviation + random * (standardDeviation - (-standardDeviation));
+    // Calculation of the initial weight (He)
+    double std = sqrt(2.0 / n);
+    new_connection->weight = ((double)rand() / RAND_MAX) * std;
 
     return new_connection;
 }
