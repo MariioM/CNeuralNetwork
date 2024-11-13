@@ -37,11 +37,12 @@ extern tLayer *CreateLayer(int neuron_count);
 
 extern void CreateConnectionsBetweenLayers(tLayer *layer1, tLayer *layer2);
 extern void SetInput(tLayer *layer, double input);
-extern void ForwardPropagation(tLayer *currentLayer);
+extern void ForwardPropagation(tLayer *currentLayer, int is_output_layer);
 extern void SetLayerInputFromPreviousLayer(tLayer *previousLayer, tLayer *currentLayer);
+extern double denormalize(double normalized_value, double min, double max);
 
 extern void CalculateOutputError(tLayer *outputLayer, double expected);
 extern void Backpropagate(tLayer *currentLayer, float learning_rate);
-extern void TrainNetwork(tLayer *entryLayer, tLayer *hiddenLayer1, tLayer *hiddenLayer2, tLayer *outputLayer, double *inputs, double *expected_outputs, int data_count, int epochs, float learning_rate);
+extern void TrainNetwork(tLayer *entryLayer, tLayer *hiddenLayer1, tLayer *outputLayer, double *inputs, double *expected_outputs, int data_count, int epochs, float learning_rate);
 
 #endif
